@@ -10,7 +10,7 @@
 ---
 
 ### Посилання на SRS
-[Google Docs: SRS Document](https://docs.google.com/document/d/1w-USlzElwEqSRdCAOUBXmHiVwIJE1CJlF2MBQ5HPjDU/edit?usp=sharing)
+[Google Docs: SRS Document](https://docs.google.com/document/d/1w-USlzElwEqSRdCAOUBXmHiVwIJE1CJ1F2MBQ5HPjDU/edit?usp=sharing)
 
 ---
 
