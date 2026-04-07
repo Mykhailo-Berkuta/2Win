@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2Win - SRS v0.1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #1e1c18;
+        background: #f5f4f0;
+        padding: 40px 20px 80px;
+      }
+
+      .page {
+        max-width: 780px;
+        margin: 0 auto;
+      }
+
+      /* TITLE BLOCK */
+      .title-block {
+        background: #fff;
+        border: 1px solid #dedad4;
+        border-radius: 12px;
+        padding: 32px 36px;
+        margin-bottom: 20px;
+      }
+      .project-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #01696f;
+        margin-bottom: 10px;
+      }
+      h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #1e1c18;
+        margin-bottom: 6px;
+      }
+      .subtitle {
+        color: #7a7772;
+        font-size: 14px;
+        margin-bottom: 24px;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 10px;
+      }
+      .meta-item {
+        background: #f5f4f0;
+        border: 1px solid #dedad4;
+        border-radius: 8px;
+        padding: 8px 12px;
+      }
+      .meta-label {
+        font-size: 11px;
+        color: #aaa9a4;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .meta-value {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #1e1c18;
+        margin-top: 1px;
+      }
+
+      /* TEAM */
+      .team-block {
+        background: #fff;
+        border: 1px solid #dedad4;
+        border-radius: 12px;
+        padding: 20px 28px;
+        margin-bottom: 20px;
+      }
+      .block-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: #aaa9a4;
+        margin-bottom: 14px;
+      }
+      .team-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .team-member {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1e1c18;
+      }
+      .av {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #d6eeec;
+        color: #01696f;
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      /* LINK */
+      .link-block {
+        background: #edf6f5;
+        border: 1px solid #b8d9d6;
+        border-radius: 10px;
+        padding: 14px 20px;
+        margin-bottom: 28px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+      }
+      .link-block a {
+        color: #01696f;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .link-block a:hover {
+        text-decoration: underline;
+      }
+
+      /* SECTIONS */
+      .section {
+        margin-bottom: 14px;
+      }
+      .section-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #01696f;
+        color: #fff;
+        border-radius: 8px 8px 0 0;
+        padding: 11px 20px;
+      }
+      .s-num {
+        width: 24px;
+        height: 24px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.2);
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .s-title {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .s-sub {
+        font-size: 12px;
+        opacity: 0.65;
+        margin-left: auto;
+      }
+      .section-body {
+        background: #fff;
+        border: 1px solid #dedad4;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        padding: 18px 20px;
+      }
+
+      /* ITEMS */
+      ul.items {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .item {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        background: #f9f8f5;
+        border: 1px solid #e8e5e0;
+        border-radius: 7px;
+        padding: 9px 13px;
+        font-size: 14px;
+        color: #3a3730;
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #01696f;
+        margin-top: 8px;
+        flex-shrink: 0;
+      }
+      .item strong {
+        color: #1e1c18;
+      }
+
+      /* BADGES */
+      .badge {
+        display: inline-block;
+        padding: 1px 7px;
+        border-radius: 99px;
+        font-size: 11px;
+        font-weight: 700;
+        margin-right: 5px;
+        flex-shrink: 0;
+      }
+      .must {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+      }
+      .should {
+        background: #fef9c3;
+        color: #854d0e;
+        border: 1px solid #fde68a;
+      }
+      .could {
+        background: #dbeafe;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+      }
+
+      /* CODE IDs */
+      code {
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        font-weight: 600;
+        color: #01696f;
+        background: #edf6f5;
+        border: 1px solid #b8d9d6;
+        padding: 1px 6px;
+        border-radius: 4px;
+      }
+
+      /* SUB-LABEL inside body */
+      .sub-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #aaa9a4;
+        margin-bottom: 10px;
+        margin-top: 16px;
+      }
+      .sub-label:first-child {
+        margin-top: 0;
+      }
+
+      /* TABLE */
+      .table-wrap {
+        overflow-x: auto;
+        border-radius: 7px;
+        border: 1px solid #dedad4;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+      }
+      thead tr {
+        background: #f5f4f0;
+      }
+      th {
+        text-align: left;
+        padding: 9px 13px;
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #7a7772;
+        border-bottom: 1px solid #dedad4;
+      }
+      td {
+        padding: 9px 13px;
+        color: #3a3730;
+        border-bottom: 1px solid #edeae5;
+        vertical-align: top;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* GLOSSARY */
+      .gl-item {
+        margin-bottom: 10px;
+      }
+      .gl-term {
+        font-size: 13px;
+        font-weight: 700;
+        color: #01696f;
+        font-family: "Courier New", monospace;
+      }
+      .gl-def {
+        font-size: 14px;
+        color: #3a3730;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid #e8e5e0;
+        margin: 14px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <!-- TITLE -->
+      <div class="title-block">
+        <div class="project-label">Проєктна документація · ПЗПІ-25-5</div>
+        <h1>2Win - Сервіс спортивної аналітики та прогнозів</h1>
+        <p class="subtitle">
+          SOFTWARE REQUIREMENTS SPECIFICATION (SRS) · Специфікація вимог до
+          програмного забезпечення
+        </p>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <div class="meta-label">Назва проєкту</div>
+            <div class="meta-value">2Win</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Версія</div>
+            <div class="meta-value">v0.1 Draft</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Дата</div>
+            <div class="meta-value">23.03.2026</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Замовник</div>
+            <div class="meta-value">Група 5-3</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TEAM -->
+      <div class="team-block">
+        <div class="block-label">Команда проєкту · Група 5-1</div>
+        <div class="team-list">
+          <div class="team-member">
+            <div class="av">БМ</div>
+            Беркута Михайло Сергійович
+          </div>
+          <div class="team-member">
+            <div class="av">ЖА</div>
+            Жакун Альбіна Олександрівна
+          </div>
+          <div class="team-member">
+            <div class="av">КВ</div>
+            Козирь Всеволод Станіславович
+          </div>
+        </div>
+      </div>
+
+      <!-- LINK -->
+      <div class="link-block">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#01696f"
+          stroke-width="2.5"
+        >
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+          <polyline points="15 3 21 3 21 9" />
+          <line x1="10" y1="14" x2="21" y2="3" />
+        </svg>
+        <span>Посилання на SRS:</span>
+        <a
+          href="https://docs.google.com/document/d/1w-USlzElwEqSRdCAOUBXmHiVwIJE1CJ1F2MBQ5HPjDU/edit?usp=sharing"
+          target="_blank"
+          >Google Docs - SRS Document</a
+        >
+      </div>
+
+      <!-- 1 -->
+      <div class="section">
+        <div class="section-head">
+          <div class="s-num">1</div>
+          <div class="s-title">Вступ</div>
+          <div class="s-sub">Introduction</div>
+        </div>
+        <div class="section-body">
+          <ul class="items">
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <strong>Про продукт:</strong> 2Win - це вебсервіс, призначений
+                для аналізу спортивних подій та надання користувачам точних
+                прогнозів і рекомендацій щодо ставок.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div><strong>Замовник:</strong> Група 5-3</div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <strong>Проблема:</strong> Продукт вирішує проблему високого
+                фінансового ризику, з яким стикаються гравці (особливо новачки),
+                що роблять ставки «наосліп» або базуючись на неперевірених
+                даних.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <strong>Цільова аудиторія:</strong> Технічно грамотні люди віком
+                18–40 років, які прагнуть підвищити шанси на виграш за допомогою
+                автоматизованої аналітики та статистики.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="section">
+        <div class="section-head">
+          <div class="s-num">2</div>
+          <div class="s-title">Загальний опис</div>
+          <div class="s-sub">Overall Description</div>
+        </div>
+        <div class="section-body">
+          <div class="sub-label">Рівні користувачів</div>
+          <ul class="items">
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <strong>Гість:</strong> може переглядати лише обмежену загальну
+                інформацію та маркетинговий контент.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <strong>Зареєстрований користувач:</strong> має повний доступ до
+                прогнозів, детальної статистики, історії власних ставок та
+                персональних налаштувань.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <strong>Адміністратор:</strong> керує контентом, моніторить
+                точність прогнозів та керує обліковими записами користувачів.
+              </div>
+            </li>
+          </ul>
+          <div class="sub-label">Зовнішні залежності</div>
+          <ul class="items">
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <strong>API спортивної статистики:</strong> джерела даних про
+                матчі, склади команд та результати.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <strong>API букмекерських платформ:</strong> для отримання
+                актуальних коефіцієнтів.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <strong>Платіжні системи:</strong> для обробки підписок на
+                преміум-функції.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="section">
+        <div class="section-head">
+          <div class="s-num">3</div>
+          <div class="s-title">Функціональні вимоги</div>
+          <div class="s-sub">Functional Requirements</div>
+        </div>
+        <div class="section-body">
+          <ul class="items">
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>FR-01</code> <span class="badge must">Must</span> Система
+                повинна забезпечувати реєстрацію та автентифікацію користувачів
+                (email/пароль).
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>FR-02</code> <span class="badge must">Must</span> Система
+                повинна автоматично генерувати прогнози на спортивні події на
+                основі аналітичних алгоритмів.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>FR-03</code>
+                <span class="badge must">Must</span> Користувач повинен мати
+                можливість переглядати детальну статистику матчів і рейтинг
+                команд.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>FR-04</code> <span class="badge must">Must</span> Система
+                повинна відображати персоналізовані рекомендації для ставок на
+                основі обраних видів спорту.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>FR-05</code>
+                <span class="badge should">Should</span> Система повинна
+                зберігати та відображати історію ставок та персональні
+                налаштування користувача.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>FR-06</code>
+                <span class="badge should">Should</span> Система повинна
+                надсилати сповіщення (web-push або email) про нові важливі
+                матчі.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>FR-07</code>
+                <span class="badge should">Should</span> Користувач повинен мати
+                можливість зберігати матчі в категорію «Улюблені».
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>FR-08</code>
+                <span class="badge could">Could</span> Інтеграція з мобільними
+                месенджерами (Telegram-бот) для отримання миттєвих прогнозів.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="section">
+        <div class="section-head">
+          <div class="s-num">4</div>
+          <div class="s-title">Нефункціональні вимоги</div>
+          <div class="s-sub">Non-Functional Requirements</div>
+        </div>
+        <div class="section-body">
+          <ul class="items">
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>NFR-P</code>&nbsp; Час відповіді системи не повинен
+                перевищувати 1–3 секунди. Підтримка кількох тисяч одночасних
+                сесій.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>NFR-S</code>&nbsp; Обов'язкове шифрування (HTTPS/SSL).
+                Відповідність стандартам GDPR.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>NFR-U</code>&nbsp; Адаптивний дизайн mobile-first.
+                Підтримка Chrome, Safari, Edge, Firefox.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>NFR-R</code>&nbsp; Uptime системи ≥ 99%, особливо в
+                періоди великих турнірів.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="section">
+        <div class="section-head">
+          <div class="s-num">5</div>
+          <div class="s-title">Обмеження</div>
+          <div class="s-sub">Constraints</div>
+        </div>
+        <div class="section-body">
+          <ul class="items">
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>С-01</code>&nbsp; Платформа повинна бути реалізована як
+                вебсервіс (Python/Node.js).
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>С-02</code>&nbsp; Обмеження за віком: доступ дозволено
+                лише особам <strong>18+ років</strong>.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>С-03</code>&nbsp; Залежність від стабільності та лімітів
+                сторонніх API спортивної статистики.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>С-04</code>&nbsp; Дедлайн для випуску MVP-версії становить
+                кілька місяців.
+              </div>
+            </li>
+            <li class="item">
+              <div class="dot"></div>
+              <div>
+                <code>С-05</code>&nbsp; Юридична відповідність законодавству про
+                азартні ігри в цільових регіонах.
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 6 -->
+      <div class="section">
+        <div class="section-head">
+          <div class="s-num">6</div>
+          <div class="s-title">Глосарій</div>
+          <div class="s-sub">Glossary</div>
+        </div>
+        <div class="section-body">
+          <div class="gl-item">
+            <div class="gl-term">Прогноз / Prediction</div>
+            <div class="gl-def">
+              Розрахований алгоритмом імовірний результат спортивної події.
+            </div>
+          </div>
+          <hr />
+          <div class="gl-item">
+            <div class="gl-term">MVP - Minimum Viable Product</div>
+            <div class="gl-def">
+              Мінімально життєздатний продукт з базовою функцією генерації
+              прогнозів.
+            </div>
+          </div>
+          <hr />
+          <div class="gl-item">
+            <div class="gl-term">GDPR</div>
+            <div class="gl-def">
+              Загальний регламент про захист даних, що діє в ЄС.
+            </div>
+          </div>
+          <hr />
+          <div class="gl-item">
+            <div class="gl-term">Коефіцієнт / Odds</div>
+            <div class="gl-def">
+              Числовий показник, що визначає розмір можливого виграшу в
+              букмекерській конторі.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7 -->
+      <div class="section">
+        <div class="section-head">
+          <div class="s-num">7</div>
+          <div class="s-title">Матриця відстежуваності</div>
+          <div class="s-sub">Traceability Matrix</div>
+        </div>
+        <div class="section-body">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Вимога</th>
+                  <th>Пов'язане питання / дія</th>
+                  <th>Очікуваний результат</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>FR-01</code></td>
+                  <td>Питання 2.1 (Дії користувача)</td>
+                  <td>Успішне створення акаунта.</td>
+                </tr>
+                <tr>
+                  <td><code>FR-02</code></td>
+                  <td>Питання 5.1 (Ключова цінність)</td>
+                  <td>Коректне відображення прогнозу для обраного матчу.</td>
+                </tr>
+                <tr>
+                  <td><code>NFR-P-01</code></td>
+                  <td>Питання 3.2 (Час відповіді)</td>
+                  <td>Завантаження сторінки статистики &lt; 3с.</td>
+                </tr>
+                <tr>
+                  <td><code>С-02</code></td>
+                  <td>Питання 4.3 (Регуляторні обмеження)</td>
+                  <td>Перевірка дати народження при реєстрації.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
