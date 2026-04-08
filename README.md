@@ -7,9 +7,9 @@
 ## Автор
 
 
-- Жакун Альбіна, група ПЗПІ-25-5
+- Беркута Михайло, група ПЗПІ-25-5
 
-- Email: albina.zhakun@nure.ua
+- Email: mykhailo.berkuta@nure.ua
 
 
 ## Технології
