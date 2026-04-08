@@ -1,44 +1,43 @@
-# Назва проєкту
+#  2Win
 
+Вебсервіс для аналізу спортивних подій та надання точних прогнозів і рекомендацій щодо ставок.
 
-2Win - це вебсервіс, призначений для аналізу спортивних подій та надання користувачам точних прогнозів і рекомендацій щодо ставок.
+---
 
+###  Розробники (група ПЗПІ-25-5)
 
-## Автор
+* **Беркута Михайло** — [mykhailo.berkuta@nure.ua](mailto:mykhailo.berkuta@nure.ua)
+* **Жакун Альбіна** — [albina.zhakun@nure.ua](mailto:albina.zhakun@nure.ua)
+* **Всеволод Козирь** — [vsevolod.kozyr@nure.ua](mailto:vsevolod.kozyr@nure.ua)
 
+---
 
-- Беркута Михайло, Жакун Альбіна, Всеволод Козирь, група ПЗПІ-25-5
+###  Технології
 
-- Email: mykhailo.berkuta@nure.ua, albina.zhakun@nure.ua, vsevolod.kozyr@nure.ua
+* **Runtime:** Node.js 24.14.1
+* **IDE:** Visual Studio Code 1.110
+* **VCS:** Git 2.47 + GitHub
+* **AI Support:** GitHub Copilot Student / Codeium
 
+---
 
-## Технології
+###  Встановлення та запуск
 
+```bash
+# Клонування репозиторію
+git clone [https://github.com/Mykhailo-Berkuta/2Win.git](https://github.com/Mykhailo-Berkuta/2Win.git)
 
-- Мова програмування: Node.js 24.14.1
+# Вхід у директорію
+cd 2Win
 
-- IDE: Visual Studio Code 1.110
-
-- VCS: Git 2.47 + GitHub
-
-- AI-асистент: GitHub Copilot Student / Codeium
-
-
-## Встановлення та запуск
-
-
-
-git clone https://github.com/Mykhailo-Berkuta/2Win.git
-
-cd project
-
+# Встановлення залежностей
 npm i
 
+# Запуск проєкту
 npm run dev
-
-
+```
+---
 
 ## Ліцензія
 
-
-MIT License
+[MIT License](LICENSE)
