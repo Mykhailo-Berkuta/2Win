@@ -7,9 +7,9 @@
 ## Автор
 
 
-- **Козирь Всеволод**, група ПЗПІ-25-5
+- Жакун Альбіна, група ПЗПІ-25-5
 
-- Email: vsevolod.kozyr@nure.ua
+- Email: albina.zhakun@nure.ua
 
 
 ## Технології
@@ -27,7 +27,6 @@
 ## Встановлення та запуск
 
 
-```bash
 
 git clone https://github.com/Mykhailo-Berkuta/2Win.git
 
@@ -37,7 +36,6 @@ npm i
 
 npm run dev
 
-```
 
 
 ## Ліцензія
