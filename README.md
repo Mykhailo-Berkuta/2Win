@@ -39,5 +39,4 @@ npm run dev
 ---
 
 ## Ліцензія
-
-[MIT License](LICENSE)
+MIT License
