@@ -1,0 +1,26 @@
+@startuml
+left to right direction
+actor "Гість" as Guest
+actor "Користувач" as User
+actor "Алгоритм прогнозів" as Algorithm
+
+Guest --|> User
+
+rectangle "Система прогнозування ставок" {
+  usecase "Реєстрація (email/пароль)" as UC01
+  usecase "Підтвердження повноліття" as UC02
+  usecase "Автентифікація" as UC03
+  usecase "Перегляд сторінки матчу" as UC04
+  usecase "Отримання прогнозу результату" as UC05
+  usecase "Перегляд коефіцієнтів букмекерів" as UC06
+}
+
+Guest --> UC01
+Guest --> UC03
+UC01 ..> UC02 : <<include>>
+UC01 ..> UC03 : <<include>>
+User --> UC04
+UC04 ..> UC05 : <<include>>
+UC04 ..> UC06 : <<include>>
+Algorithm --> UC05
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+actor "Користувач" as U
+participant ":AuthService" as Auth
+participant ":Match" as M
+participant ":PredictionService" as PS
+participant ":OddsEntry" as OE
+
+U -> Auth : authenticate(email, pwd)
+Auth --> U : true
+
+U -> M : viewMatch(matchId)
+M --> U : matchInfo
+
+alt match.status == "upcoming"
+  U -> PS : calculateProbability(match)
+  PS --> U : predictionResult (homeWinProb, drawProb, awayWinProb)
+  U -> PS : fetchOdds(match)
+  PS --> U : List<OddsEntry>
+  U -> OE : getOddsData()
+  OE --> U : {bookmaker, homeOdds, drawOdds, awayOdds}
+else match.status == "finished"
+  U <-- M : "Матч завершено, прогноз недоступний"
+end
+@enduml

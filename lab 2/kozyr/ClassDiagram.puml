@@ -1,0 +1,63 @@
+@startuml
+class Guest {
+  - guestId : int
+  - sessionToken : String
+  + register(email : String, pwd : String, isAdult : boolean) : User
+}
+
+class User {
+  - userId : int
+  - email : String
+  - passwordHash : String
+  - isAdult : boolean
+  - createdAt : Date
+  + getActiveSession() : String
+  + viewMatch(matchId : int) : Match
+}
+
+class AuthService {
+  + register(email : String, pwd : String, isAdult : boolean) : User
+  + authenticate(email : String, pwd : String) : boolean
+  + validateAge(confirmed : boolean) : boolean
+}
+
+class Match {
+  - matchId : int
+  - teamHome : String
+  - teamAway : String
+  - matchDate : Date
+  - status : String
+  + getOdds() : List<OddsEntry>
+  + getPrediction() : PredictionResult
+}
+
+class PredictionService {
+  - modelVersion : String
+  + calculateProbability(match : Match) : PredictionResult
+  + fetchOdds(match : Match) : List<OddsEntry>
+}
+
+class PredictionResult {
+  - predictedOutcome : String
+  - confidence : double
+  - homeWinProb : double
+  - drawProb : double
+  - awayWinProb : double
+  + getSummary() : String
+}
+
+class OddsEntry {
+  - bookmaker : String
+  - homeOdds : double
+  - drawOdds : double
+  - awayOdds : double
+}
+
+Guest ..> AuthService : uses
+AuthService "1" --> "0..*" User : creates
+User "1" --> "0..*" Match : views
+Match "1" *-- "1" PredictionResult : contains
+Match "1" *-- "1..*" OddsEntry : contains
+PredictionService ..> Match : analyzes
+PredictionService ..> PredictionResult : produces
+@enduml
