@@ -1,0 +1,48 @@
+@startuml SD_KGLG5
+actor "Користувач" as User
+
+participant ":AuthService" as Auth
+participant ":ProfileController" as PC
+participant ":BettingHistoryService" as BHS
+participant ":BetsRepository" as DB
+
+User -> Auth : authenticate(login, pwd)
+activate Auth
+Auth --> User : true
+deactivate Auth
+
+User -> PC : GET /profile/betting-history
+activate PC
+
+PC -> Auth : validateToken(jwt)
+activate Auth
+Auth --> PC : userId
+deactivate Auth
+
+PC -> BHS : getBetsByUser(userId)
+activate BHS
+
+BHS -> DB : findAllByUserId(userId)
+activate DB
+DB --> BHS : List<Bet>
+deactivate DB
+
+BHS --> PC : List<Bet>
+deactivate BHS
+
+PC --> User : 200 OK: { bets: [...] }
+deactivate PC
+
+alt список не порожній
+  User -> PC : filterByStatus(status)
+  activate PC
+  PC -> BHS : filterByStatus(userId, status)
+  activate BHS
+  BHS --> PC : List<Bet>
+  deactivate BHS
+  PC --> User : відфільтрований список
+  deactivate PC
+else список порожній
+  PC --> User : "Ставок не знайдено"
+end
+@enduml

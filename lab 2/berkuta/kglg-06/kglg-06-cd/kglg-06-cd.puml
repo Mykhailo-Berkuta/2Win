@@ -1,0 +1,53 @@
+@startuml CD_KGLG6
+class User {
+  - userId : int
+  - name : String
+  - email : String
+  + getSettings() : NotificationSettings
+}
+
+class NotificationSettings {
+  - settingsId : int
+  - notificationsEnabled : boolean
+  - favoriteCategories : List<String>
+  + enable() : void
+  + disable() : void
+  + addCategory(category : String) : void
+}
+
+class NotificationService {
+  + scheduleMatchNotification(match : Match, userId : int) : void
+  + sendWebPush(userId : int, message : String) : void
+  + sendEmail(email : String, message : String) : void
+}
+
+class MatchNotification {
+  - notifId : int
+  - message : String
+  - matchLink : String
+  - sentAt : Date
+  - channel : String
+  + getMatchLink() : String
+}
+
+class Match {
+  - matchId : int
+  - name : String
+  - category : String
+  - startTime : Date
+  + isUpcomingWithin(minutes : int) : boolean
+  + getInfo() : String
+}
+
+class SportsStatsAPIClient {
+  + fetchUpcomingMatches(category : String) : List<Match>
+  + getMatchById(matchId : int) : Match
+}
+
+User "1" *-- "1" NotificationSettings : містить >
+User "1" -- "*" MatchNotification : отримує >
+NotificationService ..> NotificationSettings : <<reads>>
+NotificationService ..> MatchNotification : <<creates>>
+NotificationService ..> SportsStatsAPIClient : <<calls>>
+MatchNotification "*" -- "1" Match : посилання на >
+@enduml

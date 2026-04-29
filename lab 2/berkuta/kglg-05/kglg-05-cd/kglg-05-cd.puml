@@ -1,0 +1,50 @@
+@startuml CD_KGLG5
+class User {
+  - userId : int
+  - name : String
+  - email : String
+  + login(login : String, pwd : String) : boolean
+  + getActiveLoans() : List<Bet>
+}
+
+class Bet {
+  - betId : int
+  - amount : double
+  - odds : double
+  - placedAt : Date
+  - status : BetStatus
+  + isWon() : boolean
+  + calculatePotentialWin() : double
+}
+
+enum BetStatus {
+  WIN
+  LOSS
+  PENDING
+}
+
+class BettingHistoryService {
+  + getBetsByUser(userId : int) : List<Bet>
+  + filterByStatus(userId : int, status : BetStatus) : List<Bet>
+  + sortByDate(bets : List<Bet>) : List<Bet>
+}
+
+class Match {
+  - matchId : int
+  - name : String
+  - category : String
+  - startTime : Date
+  + getInfo() : String
+}
+
+class AuthService {
+  + authenticate(login : String, pwd : String) : boolean
+}
+
+User "1" -- "*" Bet : має >
+Bet "*" -- "1" Match : стосується >
+Bet --> BetStatus
+BettingHistoryService ..> Bet : <<uses>>
+BettingHistoryService ..> User : <<uses>>
+User ..> AuthService : <<uses>>
+@enduml

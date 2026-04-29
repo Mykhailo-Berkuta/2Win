@@ -1,0 +1,31 @@
+@startuml UC_KGLG6
+left to right direction
+
+actor "Користувач" as User
+actor "Планувальник\n(Scheduler)" as Scheduler
+actor "Зовнішній API\nстатистики" as SportsAPI
+
+rectangle "Модуль сповіщень - Notify (KGLG-6)" {
+  usecase "Налаштувати сповіщення" as UC1
+  usecase "Отримати web-push сповіщення" as UC2
+  usecase "Отримати email-сповіщення" as UC3
+  usecase "Перейти на сторінку матчу" as UC4
+  usecase "Отримати дані про матч" as UC5
+  usecase "Автентифікація" as UC6
+}
+
+User --> UC1
+User --> UC4
+User --> UC6
+
+Scheduler --> UC2
+Scheduler --> UC3
+
+SportsAPI --> UC5
+
+UC1 ..> UC6 : <<include>>
+UC2 ..> UC5 : <<include>>
+UC3 ..> UC5 : <<include>>
+UC4 ..> UC2 : <<extend>>
+UC4 ..> UC3 : <<extend>>
+@enduml

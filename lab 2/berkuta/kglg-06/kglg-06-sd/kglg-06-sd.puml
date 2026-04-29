@@ -1,0 +1,56 @@
+@startuml SD_KGLG6
+actor "Користувач" as User
+
+participant ":MatchScheduler" as CRON
+participant ":SportsStatsAPIClient" as API
+participant ":NotificationService" as NS
+participant ":NotificationSettings\nRepository" as NSR
+participant ":PushGateway" as PUSH
+participant ":EmailService" as MAIL
+
+CRON -> API : fetchUpcomingMatches(category)
+activate CRON
+activate API
+API --> CRON : List<Match>
+deactivate API
+
+loop для кожного матчу з List<Match>
+  CRON -> NSR : getUsersByCategory(match.category)
+  activate NSR
+  NSR --> CRON : List<UserSettings>
+  deactivate NSR
+
+  CRON -> NS : scheduleNotification(match, users)
+  activate NS
+
+  loop для кожного користувача
+    NS -> NSR : getChannels(userId)
+    activate NSR
+    NSR --> NS : channels
+    deactivate NSR
+
+    alt channel == WEB_PUSH
+      NS -> PUSH : sendPush(userId, payload)
+      activate PUSH
+      PUSH --> User :  Матч за 1 годину
+      PUSH --> NS : delivered
+      deactivate PUSH
+    else channel == EMAIL
+      NS -> MAIL : sendEmail(email, payload)
+      activate MAIL
+      MAIL --> User :  Email з посиланням
+      MAIL --> NS : sent
+      deactivate MAIL
+    end
+  end
+
+  deactivate NS
+end
+
+deactivate CRON
+
+User -> PUSH : клік на сповіщення
+activate PUSH
+PUSH --> User : відкрити сторінку матчу
+deactivate PUSH
+@enduml
