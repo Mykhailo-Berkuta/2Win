@@ -1,0 +1,45 @@
+@startuml
+
+actor User
+participant "Web UI" as UI
+participant "StatsService" as Service
+participant "ApiClient" as API
+participant "Match" as Match
+participant "MatchStats" as Stats
+
+User -> UI : обрати матч
+activate UI
+
+UI -> Service : getMatchStats(matchId)
+activate Service
+
+Service -> API : fetchMatchData(matchId)
+activate API
+API --> Service : JSON дані
+deactivate API
+
+Service -> Match : створити Match
+activate Match
+Match --> Service
+deactivate Match
+
+Service -> Stats : створити MatchStats
+activate Stats
+Stats --> Service
+deactivate Stats
+
+Service --> UI : MatchStats
+deactivate Service
+
+alt є фільтр
+    User -> UI : задати фільтр
+    UI -> Service : filterStats(criteria)
+    activate Service
+    Service --> UI : відфільтровані дані
+    deactivate Service
+end
+
+UI --> User : відобразити статистику
+deactivate UI
+
+@enduml

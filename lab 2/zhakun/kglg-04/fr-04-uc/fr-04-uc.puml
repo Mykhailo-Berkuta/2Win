@@ -1,0 +1,28 @@
+@startuml
+left to right direction
+
+actor "Зареєстрований користувач" as User
+actor "Адміністратор" as Admin
+
+rectangle "Рекомендації ставок" {
+
+  usecase "Переглянути рекомендації ставок" as UC1
+  usecase "Згенерувати персоналізовані рекомендації" as UC2
+  usecase "Аналіз вподобань користувача" as UC3
+  usecase "Отримати коефіцієнти з API" as UC4
+  usecase "Налаштувати види спорту" as UC5
+  usecase "Оновити алгоритм рекомендацій" as UC6
+
+  UC1 --> UC2 : <<include>>
+  UC2 --> UC3 : <<include>>
+  UC2 --> UC4 : <<include>>
+  UC5 --> UC2 : <<extend>>
+
+}
+
+User --> UC1
+User --> UC5
+
+Admin --> UC6
+
+@enduml

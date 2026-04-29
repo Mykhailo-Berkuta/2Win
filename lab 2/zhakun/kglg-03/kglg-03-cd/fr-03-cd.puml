@@ -1,0 +1,48 @@
+@startuml
+
+class Match {
+    +matchId: int
+    +date: Date
+    +teamHome: Team
+    +teamAway: Team
+    +scoreHome: int
+    +scoreAway: int
+    +getStats(): MatchStats
+}
+
+class Team {
+    +teamId: int
+    +name: string
+    +rating: float
+    +updateRating(): void
+}
+
+class MatchStats {
+    +possessionHome: float
+    +possessionAway: float
+    +shotsHome: int
+    +shotsAway: int
+    +foulsHome: int
+    +foulsAway: int
+}
+
+class StatsService {
+    +getMatchList(): List<Match>
+    +getMatchStats(matchId: int): MatchStats
+    +getTeamRating(teamId: int): float
+    +filterStats(criteria: string): List<Match>
+}
+
+class ApiClient {
+    +fetchMatchData(): JSON
+    +fetchTeamRatings(): JSON
+}
+
+Match "1" --> "2" Team : teams
+Match "1" --> "1" MatchStats : stats
+StatsService --> Match
+StatsService --> Team
+StatsService --> MatchStats
+StatsService --> ApiClient : uses
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+
+actor User
+participant "Web UI" as UI
+participant "RecommendationEngine" as Engine
+participant "OddsApiClient" as API
+participant "User" as UserEntity
+participant "Recommendation" as Rec
+
+User -> UI : відкрити рекомендації
+activate UI
+
+UI -> Engine : generateRecommendations(userId)
+activate Engine
+
+Engine -> UserEntity : getPreferences()
+activate UserEntity
+UserEntity --> Engine : список спорту
+deactivate UserEntity
+
+loop для кожного матчу
+    Engine -> API : fetchOdds(matchId)
+    activate API
+    API --> Engine : odds
+    deactivate API
+
+    Engine -> Engine : calculateConfidence()
+    
+    Engine -> Rec : створити Recommendation
+    activate Rec
+    Rec --> Engine
+    deactivate Rec
+end
+
+Engine --> UI : список рекомендацій
+deactivate Engine
+
+alt зміна вподобань
+    User -> UI : змінити види спорту
+    UI -> Engine : updatePreferences()
+    activate Engine
+    Engine --> UI : OK
+    deactivate Engine
+end
+
+UI --> User : відобразити рекомендації
+deactivate UI
+
+@enduml

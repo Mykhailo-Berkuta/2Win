@@ -1,0 +1,48 @@
+@startuml
+
+class User {
+    +userId: int
+    +email: string
+    +preferredSports: List<string>
+    +getPreferences(): List<string>
+}
+
+class Recommendation {
+    +recId: int
+    +matchId: int
+    +odds: float
+    +confidence: float
+    +description: string
+}
+
+class RecommendationEngine {
+    +generateRecommendations(userId: int): List<Recommendation>
+    +analyzePreferences(user: User): List<string>
+    +calculateConfidence(match: Match): float
+}
+
+class Match {
+    +matchId: int
+    +teamHome: Team
+    +teamAway: Team
+    +date: Date
+}
+
+class Team {
+    +teamId: int
+    +name: string
+    +rating: float
+}
+
+class OddsApiClient {
+    +fetchOdds(matchId: int): float
+}
+
+User "1" --> "*" Recommendation : receives
+RecommendationEngine --> User : analyzes
+RecommendationEngine --> Match : uses
+RecommendationEngine --> Recommendation : creates
+RecommendationEngine --> OddsApiClient : fetches odds
+Match "*" --> "2" Team
+
+@enduml
