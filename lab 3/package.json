@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": { "lines": 80 }
+    },
+    "coverageReporters": ["text", "html"]
+  }
+}
