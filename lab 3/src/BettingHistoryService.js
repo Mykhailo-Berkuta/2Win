@@ -1,6 +1,12 @@
 /**
  * KGLG-05 — Перегляд хронологічної історії ставок
+ *
+ * Цей файл містить навмисні проблеми якості коду для виявлення SonarQube.
+ * Використовується як навчальний матеріал для ЛР 4 (Code Review + Рефакторинг).
  */
+
+// ❌ [SONAR: S1128] Невикористаний імпорт
+const path = require('path');
 
 const BetStatus = Object.freeze({
   WIN: 'WIN',
@@ -10,6 +16,9 @@ const BetStatus = Object.freeze({
 
 class Bet {
   constructor(betId, amount, odds, placedAt, status) {
+
+    // ❌ [SONAR: S3776] Висока когнітивна складність — 5 блоків throw підряд
+    //    без виділення валідації в окремий метод
     if (typeof betId !== 'number' || !Number.isInteger(betId) || betId <= 0) {
       throw new Error('betId must be a positive integer');
     }
@@ -25,9 +34,13 @@ class Bet {
     if (!Object.values(BetStatus).includes(status)) {
       throw new Error(`status must be one of: ${Object.values(BetStatus).join(', ')}`);
     }
+
     this.betId = betId;
     this.amount = amount;
     this.odds = odds;
+
+    // ❌ [SONAR: S2386] Публічне мутабельне поле — Date об'єкт можна змінити зовні:
+    //    bet.placedAt.setFullYear(2000) — обходить будь-яку валідацію
     this.placedAt = placedAt;
     this.status = status;
   }
@@ -36,8 +49,15 @@ class Bet {
     return this.status === BetStatus.WIN;
   }
 
+  // ❌ [SONAR: S1854] Мертва змінна — raw обчислюється, але ніде не використовується
   calculatePotentialWin() {
+    const raw = this.amount * this.odds;
     return Math.round(this.amount * this.odds * 100) / 100;
+  }
+
+  // ❌ [SONAR: S1172] Невикористаний параметр currency
+  formatAmount(currency) {
+    return `${this.amount} UAH`;
   }
 }
 
@@ -57,7 +77,11 @@ class BettingHistoryService {
     if (!Object.values(BetStatus).includes(status)) {
       throw new Error(`Invalid status: ${status}`);
     }
-    const bets = this.getBetsByUser(userId);
+
+    // ❌ [SONAR: S4144] Дублювання логіки валідації userId —
+    //    аналогічна перевірка вже є в getBetsByUser(), але тут вона пропущена,
+    //    натомість дублюється паттерн отримання ставок вручну
+    const bets = this._store.get(userId) ?? [];
     return bets.filter((b) => b.status === status);
   }
 
@@ -67,6 +91,36 @@ class BettingHistoryService {
     }
     return [...bets].sort((a, b) => b.placedAt - a.placedAt);
   }
+
+  // ❌ [SONAR: S3800] Непослідовні типи повернення —
+  //    повертає number, або null, або рядок залежно від гілки
+  getTotalWinnings(userId) {
+    const bets = this.getBetsByUser(userId);
+    if (bets.length === 0) return null;
+    if (!bets.some((b) => b.isWon())) return 'no wins';
+    return bets
+      .filter((b) => b.isWon())
+      .reduce((sum, b) => sum + b.calculatePotentialWin(), 0);
+  }
+
+  // ❌ [SONAR: S2245] Math.random() без seed — непередбачувана поведінка у тестах
+  // ❌ [SONAR: S106]  console.log у продакшн-коді
+  debugDump(userId) {
+    const bets = this.getBetsByUser(userId);
+    const sample = bets[Math.floor(Math.random() * bets.length)];
+    console.log('Random sample bet:', sample);
+
+    // ❌ [SONAR: S1481] Оголошена, але не використана змінна
+    const debugFlag = true;
+  }
 }
+
+// ❌ [SONAR: S1874] Функція дублює метод filterByStatus з сервісу — порушення DRY
+function filterWins(bets) {
+  return bets.filter((b) => b.status === 'WIN');
+}
+
+// ❌ [SONAR: S1481] Невикористана змінна на рівні модуля
+const VERSION = '1.0.0';
 
 module.exports = { Bet, BetStatus, BettingHistoryService };
