@@ -1,6 +1,6 @@
-
 const MIN_PASSWORD_LENGTH = 6;
-
+const DEFAULT_RATING = 50;
+const DRAW_WEIGHT = 20;
 class AuthService {
   constructor() {
     this.users = [];
@@ -12,23 +12,23 @@ class AuthService {
    * BVA: мінімальна довжина пароля = 6 символів
    */
   register(email, pwd, isAdult) {
-    if (!email || typeof email !== 'string' || !email.includes('@')) {
-      throw new Error('Invalid email format');
+    if (!email || typeof email !== "string" || !email.includes("@")) {
+      throw new Error("Invalid email format");
     }
-    if (!pwd || typeof pwd !== 'string' || pwd.length < MIN_PASSWORD_LENGTH) {
-      throw new Error('Password must be at least 6 characters');
+    if (!pwd || typeof pwd !== "string" || pwd.length < MIN_PASSWORD_LENGTH) {
+      throw new Error("Password must be at least 6 characters");
     }
     if (!isAdult) {
-      throw new Error('User must be an adult');
+      throw new Error("User must be an adult");
     }
-    if (this.users.find(u => u.email === email)) {
-      throw new Error('Email already registered');
+    if (this.users.find((u) => u.email === email)) {
+      throw new Error("Email already registered");
     }
 
     const user = {
       userId: this.users.length + 1,
       email,
-      passwordHash: Buffer.from(pwd).toString('base64'),
+      passwordHash: Buffer.from(pwd).toString("base64"),
       isAdult,
       createdAt: new Date(),
     };
@@ -42,9 +42,9 @@ class AuthService {
    */
   authenticate(email, pwd) {
     if (!email || !pwd) return false;
-    const user = this.users.find(u => u.email === email);
+    const user = this.users.find((u) => u.email === email);
     if (!user) return false;
-    return user.passwordHash === Buffer.from(pwd).toString('base64');
+    return user.passwordHash === Buffer.from(pwd).toString("base64");
   }
 
   /**
@@ -57,7 +57,13 @@ class AuthService {
 }
 
 class PredictionResult {
-  constructor({ predictedOutcome, confidence, homeWinProb, drawProb, awayWinProb }) {
+  constructor({
+    predictedOutcome,
+    confidence,
+    homeWinProb,
+    drawProb,
+    awayWinProb,
+  }) {
     this.predictedOutcome = predictedOutcome;
     this.confidence = confidence;
     this.homeWinProb = homeWinProb;
@@ -71,7 +77,7 @@ class PredictionResult {
 }
 
 class PredictionService {
-  constructor(modelVersion = 'v1.0') {
+  constructor(modelVersion = "v1.0") {
     this.modelVersion = modelVersion;
   }
 
@@ -83,32 +89,32 @@ class PredictionService {
    * BVA: homeRating та awayRating від 0 до 100
    */
   calculateProbability(match) {
-    if (!match || typeof match !== 'object') {
-      throw new Error('Match object is required');
+    if (!match || typeof match !== "object") {
+      throw new Error("Match object is required");
     }
-    if (match.status !== 'upcoming') {
-      throw new Error('Prediction unavailable: match is not upcoming');
+    if (match.status !== "upcoming") {
+      throw new Error("Prediction unavailable: match is not upcoming");
     }
 
-    const home = match.homeRating ?? 50;
-    const away = match.awayRating ?? 50;
+    const home = match.homeRating ?? DEFAULT_RATING;
+    const away = match.awayRating ?? DEFAULT_RATING;
 
     if (home < 0 || home > 100 || away < 0 || away > 100) {
-      throw new Error('Ratings must be between 0 and 100');
+      throw new Error("Ratings must be between 0 and 100");
     }
 
-    const total = home + away + 20; // +20 for draw weight
+    const total = home + away + DRAW_WEIGHT; // +20 for draw weight
     const homeWinProb = parseFloat((home / total).toFixed(4));
     const awayWinProb = parseFloat((away / total).toFixed(4));
     const drawProb = parseFloat((1 - homeWinProb - awayWinProb).toFixed(4));
 
     let predictedOutcome;
     if (homeWinProb > awayWinProb && homeWinProb > drawProb) {
-      predictedOutcome = 'home_win';
+      predictedOutcome = "home_win";
     } else if (awayWinProb > homeWinProb && awayWinProb > drawProb) {
-      predictedOutcome = 'away_win';
+      predictedOutcome = "away_win";
     } else {
-      predictedOutcome = 'draw';
+      predictedOutcome = "draw";
     }
 
     return new PredictionResult({
@@ -126,12 +132,12 @@ class PredictionService {
    * BVA: odds.length === 0 → порожній масив
    */
   fetchOdds(match) {
-    if (!match || typeof match !== 'object') {
-      throw new Error('Match object is required');
+    if (!match || typeof match !== "object") {
+      throw new Error("Match object is required");
     }
     if (!Array.isArray(match.odds)) return [];
 
-    return match.odds.map(entry => ({
+    return match.odds.map((entry) => ({
       bookmaker: entry.bookmaker,
       homeOdds: entry.homeOdds,
       drawOdds: entry.drawOdds,
