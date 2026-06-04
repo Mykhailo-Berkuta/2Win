@@ -5,8 +5,6 @@
  * Використовується як навчальний матеріал для ЛР 4 (Code Review + Рефакторинг).
  */
 
-// ❌ [SONAR: S1128] Невикористаний імпорт
-const path = require('path');
 
 const BetStatus = Object.freeze({
   WIN: 'WIN',
@@ -123,4 +121,4 @@ function filterWins(bets) {
 // ❌ [SONAR: S1481] Невикористана змінна на рівні модуля
 const VERSION = '1.0.0';
 
-module.exports = { Bet, BetStatus, BettingHistoryService };
+module.exports = { Bet, BetStatus, BettingHistoryService, filterWins };

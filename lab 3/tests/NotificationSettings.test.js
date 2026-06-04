@@ -24,6 +24,12 @@ describe('NotificationSettings — constructor', () => {
       .toThrow('favoriteCategories must be an array');
   });
 
+  test('TC-03b: кидає помилку якщо notificationsEnabled не boolean (EP: негативний)', () => {
+    // Arrange / Act & Assert
+    expect(() => new NotificationSettings(1, 'true', []))
+      .toThrow('notificationsEnabled must be a boolean');
+  });
+
 });
 
 // ─── enable / disable ──────────────────────────────────────────────────────────
@@ -110,6 +116,16 @@ describe('NotificationSettings.removeCategory()', () => {
     expect(removed).toBe(false);
   });
 
+  test('TC-11b: повертає false якщо помилка при видаленні (EP: помилка)', () => {
+    // Arrange
+    const settings = new NotificationSettings(1, true, ['Football']);
+    // Act
+    const removed = settings.removeCategory('FOOTBALL');
+    // Assert
+    expect(removed).toBe(true);
+    expect(settings.favoriteCategories).toHaveLength(0);
+  });
+
 });
 
 // ─── shouldNotify ──────────────────────────────────────────────────────────────
@@ -141,6 +157,79 @@ describe('NotificationSettings.shouldNotify()', () => {
     const settings = new NotificationSettings(1, true, ['Football']);
     // Act & Assert
     expect(settings.shouldNotify('FOOTBALL')).toBe(true);
+  });
+
+});
+
+// ─── logStatus ─────────────────────────────────────────────────────────────────
+describe('NotificationSettings.logStatus()', () => {
+
+  test('TC-16: логує статус сповіщень та кількість категорій (EP: позитивний)', () => {
+    // Arrange
+    const settings = new NotificationSettings(1, true, ['football', 'tennis']);
+    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    // Act
+    settings.logStatus('football');
+    // Assert
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Notifications enabled'));
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Categories count'));
+    consoleSpy.mockRestore();
+  });
+
+  test('TC-17: логує рандомний дебаг якщо Math.random() > 0.5 (EP: рандомна гілка)', () => {
+    // Arrange
+    const settings = new NotificationSettings(1, true, ['football']);
+    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(Math, 'random').mockReturnValue(0.6); // > 0.5
+    // Act
+    settings.logStatus('football');
+    // Assert
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Random debug output'));
+    consoleSpy.mockRestore();
+  });
+
+  test('TC-18: може не логувати рандом якщо Math.random() <= 0.5 (EP: друга гілка)', () => {
+    // Arrange
+    const settings = new NotificationSettings(1, true, ['football']);
+    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(Math, 'random').mockReturnValue(0.3); // <= 0.5
+    // Act
+    settings.logStatus('football');
+    // Assert
+    const calls = consoleSpy.mock.calls.flat().join(' ');
+    expect(calls).toContain('Notifications enabled');
+    expect(calls).toContain('Categories count');
+    consoleSpy.mockRestore();
+  });
+
+});
+
+// ─── createSettings ────────────────────────────────────────────────────────────
+describe('createSettings()', () => {
+
+  test('TC-19: створює NotificationSettings з коректними параметрами (EP: позитивний)', () => {
+    // Arrange / Act
+    const settings = require('../src/NotificationSettings').createSettings(1, true, ['football']);
+    // Assert
+    expect(settings).toBeInstanceOf(NotificationSettings);
+    expect(settings.settingsId).toBe(1);
+    expect(settings.notificationsEnabled).toBe(true);
+  });
+
+  test('TC-20: повертає null якщо id не передано (EP: відсутній id)', () => {
+    // Arrange / Act
+    const createSettings = require('../src/NotificationSettings').createSettings;
+    const result = createSettings(null, true, []);
+    // Assert
+    expect(result).toBeNull();
+  });
+
+  test('TC-21: повертає рядок якщо enabled не передано (EP: відсутній enabled)', () => {
+    // Arrange / Act
+    const createSettings = require('../src/NotificationSettings').createSettings;
+    const result = createSettings(1, undefined, []);
+    // Assert
+    expect(result).toBe('missing enabled flag');
   });
 
 });

@@ -241,3 +241,191 @@ describe('BettingHistoryService.sortByDate()', () => {
   });
 
 });
+
+// ─── BettingHistoryService.getTotalWinnings ────────────────────────────────────
+describe('BettingHistoryService.getTotalWinnings()', () => {
+
+  test('TC-23: обчислює сумму виграшів для WIN ставок (EP: позитивний)', () => {
+    // Arrange
+    const bets = [
+      new Bet(1, 100, 2.0, new Date('2025-01-01'), BetStatus.WIN),
+      new Bet(2, 50, 3.0, new Date('2025-02-01'), BetStatus.WIN),
+    ];
+    const store = new Map([[1, bets]]);
+    const service = new BettingHistoryService(store);
+    // Act
+    const result = service.getTotalWinnings(1);
+    // Assert
+    expect(result).toBe(350); // 100*2.0 + 50*3.0 = 200 + 150
+  });
+
+  test('TC-24: повертає null якщо користувач не має ставок (EP: немає ставок)', () => {
+    // Arrange
+    const service = new BettingHistoryService(new Map());
+    // Act
+    const result = service.getTotalWinnings(999);
+    // Assert
+    expect(result).toBeNull();
+  });
+
+  test('TC-25: повертає "no wins" якщо немає WIN ставок (EP: немає виграшів)', () => {
+    // Arrange
+    const bets = [
+      new Bet(1, 100, 2.0, new Date('2025-01-01'), BetStatus.LOSS),
+      new Bet(2, 50, 1.5, new Date('2025-02-01'), BetStatus.PENDING),
+    ];
+    const store = new Map([[1, bets]]);
+    const service = new BettingHistoryService(store);
+    // Act
+    const result = service.getTotalWinnings(1);
+    // Assert
+    expect(result).toBe('no wins');
+  });
+
+  test('TC-26: ігнорує LOSS та PENDING при обчисленні (EP: змішані статуси)', () => {
+    // Arrange
+    const bets = [
+      new Bet(1, 100, 2.0, new Date('2025-01-01'), BetStatus.WIN),
+      new Bet(2, 50, 1.5, new Date('2025-02-01'), BetStatus.LOSS),
+      new Bet(3, 75, 1.8, new Date('2025-03-01'), BetStatus.PENDING),
+    ];
+    const store = new Map([[1, bets]]);
+    const service = new BettingHistoryService(store);
+    // Act
+    const result = service.getTotalWinnings(1);
+    // Assert
+    expect(result).toBe(200); // тільки 100 * 2.0
+  });
+
+});
+
+// ─── BettingHistoryService.debugDump ───────────────────────────────────────────
+describe('BettingHistoryService.debugDump()', () => {
+
+  test('TC-27: ejecuta без помилок для користувача з ставками (EP: позитивний)', () => {
+    // Arrange
+    const bets = [
+      new Bet(1, 100, 2.0, new Date('2025-01-01'), BetStatus.WIN),
+      new Bet(2, 50, 1.5, new Date('2025-02-01'), BetStatus.LOSS),
+    ];
+    const store = new Map([[1, bets]]);
+    const service = new BettingHistoryService(store);
+    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    // Act
+    service.debugDump(1);
+    // Assert
+    expect(consoleSpy).toHaveBeenCalled();
+    consoleSpy.mockRestore();
+  });
+
+  test('TC-28: выбирає один bet з масиву (EP: позитивний)', () => {
+    // Arrange
+    const bets = [
+      new Bet(1, 100, 2.0, new Date('2025-01-01'), BetStatus.WIN),
+      new Bet(2, 50, 1.5, new Date('2025-02-01'), BetStatus.LOSS),
+      new Bet(3, 75, 1.8, new Date('2025-03-01'), BetStatus.PENDING),
+    ];
+    const store = new Map([[1, bets]]);
+    const service = new BettingHistoryService(store);
+    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    // Act
+    service.debugDump(1);
+    // Assert
+    expect(consoleSpy).toHaveBeenCalled();
+    const logCall = consoleSpy.mock.calls[0][0];
+    expect(logCall).toBe('Random sample bet:');
+    consoleSpy.mockRestore();
+  });
+
+});
+
+// ─── Bet.formatAmount ──────────────────────────────────────────────────────────
+describe('Bet.formatAmount()', () => {
+
+  test('TC-29: форматує суму в UAH (EP: позитивний)', () => {
+    // Arrange
+    const bet = new Bet(1, 100, 2.0, new Date(), BetStatus.WIN);
+    // Act
+    const result = bet.formatAmount('USD');
+    // Assert
+    expect(result).toBe('100 UAH');
+  });
+
+  test('TC-30: ігнорує переданий параметр currency (EP: невикористаний параметр)', () => {
+    // Arrange
+    const bet = new Bet(1, 250.50, 1.5, new Date(), BetStatus.PENDING);
+    // Act
+    const result = bet.formatAmount('EUR');
+    // Assert
+    expect(result).toBe('250.5 UAH');
+  });
+
+});
+
+// ─── Bet constructor validation edge cases ───────────────────────────────────────────────
+describe('Bet constructor validation edge cases', () => {
+
+  test('TC-31: кидає помилку при betId = 0 (BVA: межа 0)', () => {
+    // Arrange / Act & Assert
+    expect(() => new Bet(0, 50, 1.5, new Date(), BetStatus.WIN))
+      .toThrow('betId must be a positive integer');
+  });
+
+  test('TC-32: кидає помилку при від\'ємному betId (EP: негативний)', () => {
+    // Arrange / Act & Assert
+    expect(() => new Bet(-1, 50, 1.5, new Date(), BetStatus.WIN))
+      .toThrow('betId must be a positive integer');
+  });
+
+  test('TC-33: кидає помилку при нецілому betId (EP: неціле число)', () => {
+    // Arrange / Act & Assert
+    expect(() => new Bet(1.5, 50, 1.5, new Date(), BetStatus.WIN))
+      .toThrow('betId must be a positive integer');
+  });
+
+  test('TC-34: кидає помилку при невалідній даті (EP: невалідна дата)', () => {
+    // Arrange / Act & Assert
+    expect(() => new Bet(1, 50, 1.5, new Date('invalid'), BetStatus.WIN))
+      .toThrow('placedAt must be a valid Date');
+  });
+
+  test('TC-35: кидає помилку якщо placedAt не Date (EP: не Date об\'єкт)', () => {
+    // Arrange / Act & Assert
+    expect(() => new Bet(1, 50, 1.5, '2025-01-01', BetStatus.WIN))
+      .toThrow('placedAt must be a valid Date');
+  });
+
+});
+
+// ─── filterWins (модульна функція) ────────────────────────────────────────────
+describe('filterWins() - standalone function', () => {
+
+  test('TC-36: фільтрує тільки WIN ставки з масиву (EP: позитивний)', () => {
+    // Arrange
+    const { filterWins } = require('../src/BettingHistoryService');
+    const bets = [
+      new Bet(1, 100, 2.0, new Date('2025-01-01'), BetStatus.WIN),
+      new Bet(2, 50, 1.5, new Date('2025-02-01'), BetStatus.LOSS),
+      new Bet(3, 75, 1.8, new Date('2025-03-01'), BetStatus.WIN),
+    ];
+    // Act
+    const wins = filterWins(bets);
+    // Assert
+    expect(wins).toHaveLength(2);
+    expect(wins.every((b) => b.status === BetStatus.WIN)).toBe(true);
+  });
+
+  test('TC-37: повертає [] якщо немає WIN (EP: порожній результат)', () => {
+    // Arrange
+    const { filterWins } = require('../src/BettingHistoryService');
+    const bets = [
+      new Bet(1, 100, 2.0, new Date('2025-01-01'), BetStatus.LOSS),
+      new Bet(2, 50, 1.5, new Date('2025-02-01'), BetStatus.PENDING),
+    ];
+    // Act
+    const wins = filterWins(bets);
+    // Assert
+    expect(wins).toEqual([]);
+  });
+
+});
