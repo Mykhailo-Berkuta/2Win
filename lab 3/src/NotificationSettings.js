@@ -104,3 +104,6 @@ function createSettings(id, enabled, categories) {
 const debugMode = true;
 
 module.exports = { NotificationSettings, createSettings };
+
+
+// 
