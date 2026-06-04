@@ -1,3 +1,6 @@
+
+const MIN_PASSWORD_LENGTH = 6;
+
 class AuthService {
   constructor() {
     this.users = [];
@@ -12,7 +15,7 @@ class AuthService {
     if (!email || typeof email !== 'string' || !email.includes('@')) {
       throw new Error('Invalid email format');
     }
-    if (!pwd || typeof pwd !== 'string' || pwd.length < 6) {
+    if (!pwd || typeof pwd !== 'string' || pwd.length < MIN_PASSWORD_LENGTH) {
       throw new Error('Password must be at least 6 characters');
     }
     if (!isAdult) {
