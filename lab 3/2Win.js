@@ -126,31 +126,47 @@ class StatsService {
   }
 
   filterStats(criteria) {
-    if (typeof criteria !== 'string' || criteria.trim() === '') {
-      throw new Error('criteria must be a non-empty string');
-    }
-
-    const c = criteria.trim().toLowerCase();
-
-    if (c.startsWith('sport:')) {
-      const sportName = c.slice('sport:'.length).trim();
-      if (!sportName) {
-        throw new Error("sport name cannot be empty in 'sport:' criteria");
-      }
-      return this._matches.filter(m => m.sport.toLowerCase() === sportName);
-    }
-
-    if (c === 'home_win')  return this._matches.filter(m => m.scoreHome > m.scoreAway);
-    if (c === 'away_win')  return this._matches.filter(m => m.scoreAway > m.scoreHome);
-    if (c === 'draw')      return this._matches.filter(m => m.scoreHome === m.scoreAway);
-
-    if (c === 'high_rated') {
-      return this._matches.filter(
-        m => m.teamHome.rating >= HIGH_RATING_THRESHOLD && m.teamAway.rating >= HIGH_RATING_THRESHOLD);
-    }
-
-    throw new Error(`Unknown filter criteria: '${criteria}'`);
+  if (typeof criteria !== 'string' || criteria.trim() === '') {
+    throw new Error('criteria must be a non-empty string');
   }
+
+  const normalizedCriteria = criteria.trim().toLowerCase();
+
+  if (normalizedCriteria.startsWith('sport:')) {
+    const sportName = normalizedCriteria.slice('sport:'.length).trim();
+    if (!sportName) {
+      throw new Error("sport name cannot be empty in 'sport:' criteria");
+    }
+    return this.filterBySport(sportName);
+  }
+
+  if (['home_win', 'away_win', 'draw'].includes(normalizedCriteria)) {
+    return this.filterByResult(normalizedCriteria);
+  }
+
+  if (normalizedCriteria === 'high_rated') {
+    return this.filterByRating(HIGH_RATING_THRESHOLD);
+  }
+
+  throw new Error(`Unknown filter criteria: '${criteria}'`);
+}
+
+filterBySport(sport) {
+  return this._matches.filter(m => m.sport.toLowerCase() === sport.toLowerCase());
+}
+
+filterByResult(result) {
+  if (result === 'home_win') return this._matches.filter(m => m.scoreHome > m.scoreAway);
+  if (result === 'away_win') return this._matches.filter(m => m.scoreAway > m.scoreHome);
+  if (result === 'draw')     return this._matches.filter(m => m.scoreHome === m.scoreAway);
+  throw new Error(`Unknown result filter: '${result}'`);
+}
+
+filterByRating(threshold = HIGH_RATING_THRESHOLD) {
+  return this._matches.filter(
+    m => m.teamHome.rating >= threshold && m.teamAway.rating >= threshold
+  );
+}
 
   _findMatch(matchId) {
     const match = this._matches.find(m => m.matchId === matchId);
