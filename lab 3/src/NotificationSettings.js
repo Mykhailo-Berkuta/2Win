@@ -50,9 +50,6 @@ class NotificationSettings {
     if (!this.favoriteCategories.map((c) => c.toLowerCase()).includes(normalized)) {
       this.favoriteCategories.push(category.trim());
     }
-
-    // ❌ [SONAR: S1854] Мертва змінна — результат обчислення зберігається, але не використовується
-    const total = this.favoriteCategories.length;
   }
 
   removeCategory(category) {
