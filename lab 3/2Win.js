@@ -8,6 +8,10 @@ function validatePositiveInteger(value, name) {
     throw new Error(`${name} must be a positive integer`);
   }
 } 
+const GOAL_DIFF_WEIGHT      = 0.2;
+const FORM_SCORE_WEIGHT     = 0.5;
+const HIGH_RATING_THRESHOLD = 70;
+
 function createTeam(teamId, name, stats = {}) {
   validatePositiveInteger(teamId, 'teamId');
   if (typeof name !== 'string' || name.trim() === '') {
@@ -114,7 +118,7 @@ class StatsService {
     if (totalMatches === 0) return 0;
 
     const winRate    = (team.wins / totalMatches) * 100;
-    const goalFactor = ((team.goalsScored ?? 0) - (team.goalsConceded ?? 0)) * 0.2;
+    const goalFactor = ((team.goalsScored ?? 0) - (team.goalsConceded ?? 0)) * GOAL_DIFF_WEIGHT;
     const formFactor = this._calcFormFactor(team.last5Matches ?? []);
 
     const rating = winRate + goalFactor + formFactor;
@@ -142,8 +146,7 @@ class StatsService {
 
     if (c === 'high_rated') {
       return this._matches.filter(
-        m => m.teamHome.rating >= 70 && m.teamAway.rating >= 70
-      );
+        m => m.teamHome.rating >= HIGH_RATING_THRESHOLD && m.teamAway.rating >= HIGH_RATING_THRESHOLD);
     }
 
     throw new Error(`Unknown filter criteria: '${criteria}'`);
@@ -158,7 +161,7 @@ class StatsService {
   _calcFormFactor(last5) {
     const scoreMap = { W: 3, D: 1, L: 0 };
     const rawScore = last5.reduce((sum, r) => sum + (scoreMap[r] ?? 0), 0);
-    return rawScore * 0.5;
+    return rawScore * FORM_SCORE_WEIGHT;
   }
 }
 
