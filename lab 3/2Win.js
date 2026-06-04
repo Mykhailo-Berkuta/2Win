@@ -3,11 +3,13 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Фабричні функції
 // ─────────────────────────────────────────────────────────────────────────────
-
-function createTeam(teamId, name, stats = {}) {
-  if (!Number.isInteger(teamId) || teamId <= 0) {
-    throw new Error('teamId must be a positive integer');
+function validatePositiveInteger(value, name) {
+  if (!Number.isInteger(value) || value <= 0) {
+    throw new Error(`${name} must be a positive integer`);
   }
+} 
+function createTeam(teamId, name, stats = {}) {
+  validatePositiveInteger(teamId, 'teamId');
   if (typeof name !== 'string' || name.trim() === '') {
     throw new Error('name must be a non-empty string');
   }
@@ -26,9 +28,7 @@ function createTeam(teamId, name, stats = {}) {
 }
 
 function createMatch(matchId, date, teamHome, teamAway, opts = {}) {
-  if (!Number.isInteger(matchId) || matchId <= 0) {
-    throw new Error('matchId must be a positive integer');
-  }
+  validatePositiveInteger(matchId, 'matchId');
   if (typeof date !== 'string' || date.trim() === '') {
     throw new Error('date must be a non-empty string');
   }
@@ -49,9 +49,7 @@ function createMatch(matchId, date, teamHome, teamAway, opts = {}) {
 }
 
 function createUser(userId, email, preferredSports = []) {
-  if (!Number.isInteger(userId) || userId <= 0) {
-    throw new Error('userId must be a positive integer');
-  }
+  validatePositiveInteger(userId, 'userId');
   if (typeof email !== 'string' || !email.includes('@')) {
     throw new Error('email must be a valid email address');
   }
