@@ -52,8 +52,7 @@ class AuthService {
    * EP: true → true; false/null/undefined → false
    */
   validateAge(confirmed) {
-    if (confirmed === null || confirmed === undefined) return false;
-    return confirmed === true;
+    return !!confirmed;
   }
 }
 
