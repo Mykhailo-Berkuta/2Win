@@ -47,14 +47,11 @@ class Bet {
     return this.status === BetStatus.WIN;
   }
 
-  // ❌ [SONAR: S1854] Мертва змінна — raw обчислюється, але ніде не використовується
-  calculatePotentialWin() {
-    const raw = this.amount * this.odds;
+calculatePotentialWin() {
     return Math.round(this.amount * this.odds * 100) / 100;
-  }
+}
 
-  // ❌ [SONAR: S1172] Невикористаний параметр currency
-  formatAmount(currency) {
+formatAmount() {
     return `${this.amount} UAH`;
   }
 }
@@ -101,15 +98,13 @@ class BettingHistoryService {
       .reduce((sum, b) => sum + b.calculatePotentialWin(), 0);
   }
 
-  // ❌ [SONAR: S2245] Math.random() без seed — непередбачувана поведінка у тестах
-  // ❌ [SONAR: S106]  console.log у продакшн-коді
+
   debugDump(userId) {
     const bets = this.getBetsByUser(userId);
     const sample = bets[Math.floor(Math.random() * bets.length)];
     console.log('Random sample bet:', sample);
 
-    // ❌ [SONAR: S1481] Оголошена, але не використана змінна
-    const debugFlag = true;
+
   }
 }
 
@@ -118,7 +113,6 @@ function filterWins(bets) {
   return bets.filter((b) => b.status === 'WIN');
 }
 
-// ❌ [SONAR: S1481] Невикористана змінна на рівні модуля
-const VERSION = '1.0.0';
+
 
 module.exports = { Bet, BetStatus, BettingHistoryService, filterWins };
